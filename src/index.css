@@ -1,0 +1,39 @@
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+
+:root {
+  --gold:        #C8973A;
+  --gold-light:  #F2D98B;
+  --gold-pale:   #FBF5E6;
+  --green:       #2D6147;
+  --green-light: #4A8C68;
+  --green-pale:  #EBF4EE;
+  --cream:       #FAF7F2;
+  --white:       #FFFFFF;
+  --text-dark:   #1A1A1A;
+  --text-mid:    #4A4035;
+  --text-soft:   #8C7B65;
+  --border:      #E8DEC8;
+  --font-serif:  'Cormorant Garamond', Georgia, serif;
+  --font-sans:   'DM Sans', system-ui, sans-serif;
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   16px;
+  --radius-full: 999px;
+  --shadow-sm:   0 2px 8px rgba(0,0,0,0.06);
+  --shadow-md:   0 8px 32px rgba(0,0,0,0.09);
+  --shadow-lg:   0 16px 48px rgba(0,0,0,0.13);
+  --transition:  0.2s ease;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--cream);
+  color: var(--text-dark);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a    { text-decoration: none; color: inherit; }
+button { cursor: pointer; font-family: inherit; }
+ul   { list-style: none; }
