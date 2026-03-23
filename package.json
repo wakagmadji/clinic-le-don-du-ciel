@@ -2,6 +2,7 @@
   "name": "le-don-du-ciel",
   "version": "1.0.0",
   "private": true,
+  "packageManager": "yarn@1.22.22",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
