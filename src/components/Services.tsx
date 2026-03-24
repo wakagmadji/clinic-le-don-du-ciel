@@ -36,11 +36,11 @@ const Services: React.FC = () => {
         .srv-card:hover { box-shadow:var(--shadow-md)!important; transform:translateY(-3px)!important; }
         .srv-card:hover .srv-bar { opacity:1!important; }
         .srv-card:hover .srv-icon-wrap { background:var(--green)!important; }
-        .srv-card:hover .srv-icon-wrap svg { color:#fff!important; }
+        .srv-card:hover .srv-icon-wrap svg { color:#fff!important; stroke:#fff!important; }
         .srv-active { border-color:var(--green)!important; box-shadow:var(--shadow-md)!important; }
         .srv-active .srv-bar { opacity:1!important; }
         .srv-active .srv-icon-wrap { background:var(--green)!important; }
-        .srv-active .srv-icon-wrap svg { color:#fff!important; }
+        .srv-active .srv-icon-wrap svg { color:#fff!important; stroke:#fff!important; }
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
       `}</style>
 
