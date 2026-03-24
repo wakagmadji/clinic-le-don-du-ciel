@@ -6,7 +6,7 @@ const Contact: React.FC = () => (
     <style>{`
       @media(max-width:860px){ #contact-grid{ grid-template-columns:1fr!important; } }
       .contact-item:hover .ci-icon { background:var(--green)!important; }
-      .contact-item:hover .ci-icon svg { color:#fff!important; }
+      .contact-item:hover .ci-icon svg { color:#fff!important; stroke:#fff!important; }
     `}</style>
 
     <div style={{ maxWidth:600, marginBottom:52 }}>
