@@ -5,18 +5,13 @@ import {
   Stethoscope, LogOut, Menu, X, ExternalLink,
 } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
-
-const NAV = [
-  { to: '/admin/dashboard', icon: LayoutDashboard, label: 'Tableau de bord' },
-  { to: '/admin/rdv',       icon: CalendarCheck,   label: 'Rendez-vous'     },
-  { to: '/admin/equipe',    icon: Users,            label: 'Équipe'          },
-  { to: '/admin/services',  icon: Stethoscope,      label: 'Services'        },
-]
+import { useRdvCount } from '../../hooks/useRdvCount'
 
 const AdminLayout: React.FC = () => {
-  const { signOut } = useAuth()
-  const navigate    = useNavigate()
-  const [open, setOpen] = useState(false)
+  const { signOut }  = useAuth()
+  const navigate     = useNavigate()
+  const rdvCount     = useRdvCount()
+  const [open, setOpen]       = useState(false)
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768)
 
   React.useEffect(() => {
@@ -30,6 +25,38 @@ const AdminLayout: React.FC = () => {
     navigate('/admin/login')
   }
 
+  const NAV = [
+    { to: '/admin/dashboard', icon: LayoutDashboard, label: 'Tableau de bord', badge: 0          },
+    { to: '/admin/rdv',       icon: CalendarCheck,   label: 'Rendez-vous',     badge: rdvCount    },
+    { to: '/admin/equipe',    icon: Users,            label: 'Équipe',          badge: 0          },
+    { to: '/admin/services',  icon: Stethoscope,      label: 'Services',        badge: 0          },
+  ]
+
+  const Badge: React.FC<{ count: number }> = ({ count }) =>
+    count > 0 ? (
+      <span style={{
+        marginLeft:'auto', minWidth:20, height:20,
+        borderRadius:999, background:'#E24B4A',
+        color:'#fff', fontSize:'0.7rem', fontWeight:600,
+        display:'flex', alignItems:'center', justifyContent:'center',
+        padding:'0 5px', lineHeight:1,
+      }}>
+        {count > 99 ? '99+' : count}
+      </span>
+    ) : null
+
+  const NavItems = ({ onClick }: { onClick?: () => void }) => (
+    <>
+      {NAV.map(({ to, icon: Icon, label, badge }) => (
+        <NavLink key={to} to={to} className="adm-link" onClick={onClick}>
+          <Icon size={17} strokeWidth={1.8}/>
+          {label}
+          <Badge count={badge}/>
+        </NavLink>
+      ))}
+    </>
+  )
+
   return (
     <div style={{ display:'flex', minHeight:'100vh', background:'#111e18', fontFamily:"'DM Sans', system-ui, sans-serif" }}>
       <style>{`
@@ -38,14 +65,14 @@ const AdminLayout: React.FC = () => {
         .adm-link.active { background:rgba(45,97,71,0.5); color:#fff; font-weight:500; }
         .adm-link.active svg { color:#4A8C68; }
         .adm-btn-link { display:flex; align-items:center; gap:10px; padding:11px 16px; border-radius:10px; font-size:0.88rem; font-weight:400; transition:background 0.15s, color 0.15s; background:none; border:none; cursor:pointer; width:100%; text-align:left; }
-        @keyframes fadeIn { from{opacity:0} to{opacity:1} }
         @keyframes slideDown { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:none} }
+        @keyframes badgePop { 0%{transform:scale(0.5)} 70%{transform:scale(1.2)} 100%{transform:scale(1)} }
+        .rdv-badge { animation: badgePop 0.3s ease; }
       `}</style>
 
       {/* SIDEBAR — desktop */}
       {!isMobile && (
         <aside style={{ width:240, flexShrink:0, background:'#0d1f17', borderRight:'1px solid rgba(255,255,255,0.06)', display:'flex', flexDirection:'column', height:'100vh', position:'sticky', top:0 }}>
-          {/* Logo */}
           <div style={{ padding:'24px 20px 20px', borderBottom:'1px solid rgba(255,255,255,0.06)' }}>
             <div style={{ display:'flex', alignItems:'center', gap:10 }}>
               <span style={{ width:34, height:34, borderRadius:'50%', background:'#2D6147', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
@@ -57,15 +84,9 @@ const AdminLayout: React.FC = () => {
               </div>
             </div>
           </div>
-          {/* Nav */}
           <nav style={{ flex:1, padding:'16px 12px', display:'flex', flexDirection:'column', gap:4 }}>
-            {NAV.map(({ to, icon: Icon, label }) => (
-              <NavLink key={to} to={to} className="adm-link">
-                <Icon size={17} strokeWidth={1.8}/> {label}
-              </NavLink>
-            ))}
+            <NavItems />
           </nav>
-          {/* Footer */}
           <div style={{ padding:'12px', borderTop:'1px solid rgba(255,255,255,0.06)', display:'flex', flexDirection:'column', gap:4 }}>
             <a href="/" target="_blank" rel="noreferrer" className="adm-link">
               <ExternalLink size={16} strokeWidth={1.8}/> Voir le site
@@ -80,11 +101,17 @@ const AdminLayout: React.FC = () => {
       {/* MAIN */}
       <div style={{ flex:1, display:'flex', flexDirection:'column', minHeight:'100vh', overflow:'auto' }}>
 
-        {/* TOPBAR — toujours visible */}
+        {/* TOPBAR */}
         <div style={{ display:'flex', alignItems:'center', gap:12, padding:'12px 16px', background:'#0d1f17', borderBottom:'1px solid rgba(255,255,255,0.06)', position:'sticky', top:0, zIndex:100 }}>
           {isMobile && (
-            <button onClick={() => setOpen(o => !o)} style={{ background:'none', border:'none', color:'#fff', cursor:'pointer', padding:4, display:'flex' }}>
+            <button onClick={() => setOpen(o => !o)} style={{ background:'none', border:'none', color:'#fff', cursor:'pointer', padding:4, display:'flex', position:'relative' }}>
               {open ? <X size={22}/> : <Menu size={22}/>}
+              {/* Badge sur le burger si menu fermé */}
+              {!open && rdvCount > 0 && (
+                <span className="rdv-badge" style={{ position:'absolute', top:-4, right:-4, width:16, height:16, borderRadius:'50%', background:'#E24B4A', color:'#fff', fontSize:'0.6rem', fontWeight:600, display:'flex', alignItems:'center', justifyContent:'center' }}>
+                  {rdvCount > 9 ? '9+' : rdvCount}
+                </span>
+              )}
             </button>
           )}
           <span style={{ fontFamily:'Cormorant Garamond, serif', fontSize:'1rem', fontWeight:600, color:'#F2D98B' }}>
@@ -105,11 +132,7 @@ const AdminLayout: React.FC = () => {
         {/* MOBILE MENU DROPDOWN */}
         {isMobile && open && (
           <div style={{ background:'#0d1f17', borderBottom:'1px solid rgba(255,255,255,0.08)', padding:'8px 12px 16px', display:'flex', flexDirection:'column', gap:4, animation:'slideDown 0.2s ease', zIndex:99 }}>
-            {NAV.map(({ to, icon: Icon, label }) => (
-              <NavLink key={to} to={to} className="adm-link" onClick={() => setOpen(false)}>
-                <Icon size={17} strokeWidth={1.8}/> {label}
-              </NavLink>
-            ))}
+            <NavItems onClick={() => setOpen(false)} />
             <div style={{ borderTop:'1px solid rgba(255,255,255,0.06)', marginTop:8, paddingTop:8, display:'flex', flexDirection:'column', gap:4 }}>
               <a href="/" target="_blank" rel="noreferrer" className="adm-link" onClick={() => setOpen(false)}>
                 <ExternalLink size={16}/> Voir le site
