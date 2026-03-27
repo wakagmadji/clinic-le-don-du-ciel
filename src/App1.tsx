@@ -11,13 +11,12 @@ import Rdv      from './components/Rdv'
 import Contact  from './components/Contact'
 import Footer   from './components/Footer'
 
-import AdminLogin     from './admin/pages/AdminLogin'
-import AdminLayout    from './admin/components/AdminLayout'
-import Dashboard      from './admin/pages/Dashboard'
-import AdminRdv       from './admin/pages/AdminRdv'
-import AdminEquipe    from './admin/pages/AdminEquipe'
-import AdminServices  from './admin/pages/AdminServices'
-import AdminCarousel  from './admin/pages/AdminCarousel'
+import AdminLogin    from './admin/pages/AdminLogin'
+import AdminLayout   from './admin/components/AdminLayout'
+import Dashboard     from './admin/pages/Dashboard'
+import AdminRdv      from './admin/pages/AdminRdv'
+import AdminEquipe   from './admin/pages/AdminEquipe'
+import AdminServices from './admin/pages/AdminServices'
 
 const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { session, loading } = useAuth()
@@ -51,7 +50,6 @@ const App: React.FC = () => (
         <Route path="rdv"       element={<AdminRdv />} />
         <Route path="equipe"    element={<AdminEquipe />} />
         <Route path="services"  element={<AdminServices />} />
-        <Route path="carousel"  element={<AdminCarousel />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

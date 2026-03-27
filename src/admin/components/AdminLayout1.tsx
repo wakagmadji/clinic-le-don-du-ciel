@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import {
   Leaf, LayoutDashboard, CalendarCheck, Users,
-  Stethoscope, LogOut, Menu, X, ExternalLink, Images,
+  Stethoscope, LogOut, Menu, X, ExternalLink,
 } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import { useRdvCount } from '../../hooks/useRdvCount'
@@ -11,7 +11,7 @@ const AdminLayout: React.FC = () => {
   const { signOut }  = useAuth()
   const navigate     = useNavigate()
   const rdvCount     = useRdvCount()
-  const [open, setOpen]         = useState(false)
+  const [open, setOpen]       = useState(false)
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768)
 
   React.useEffect(() => {
@@ -26,16 +26,21 @@ const AdminLayout: React.FC = () => {
   }
 
   const NAV = [
-    { to: '/admin/dashboard', icon: LayoutDashboard, label: 'Tableau de bord', badge: 0       },
-    { to: '/admin/rdv',       icon: CalendarCheck,   label: 'Rendez-vous',     badge: rdvCount },
-    { to: '/admin/equipe',    icon: Users,            label: 'Équipe',          badge: 0       },
-    { to: '/admin/services',  icon: Stethoscope,      label: 'Services',        badge: 0       },
-    { to: '/admin/carousel',  icon: Images,           label: 'Carousel',        badge: 0       },
+    { to: '/admin/dashboard', icon: LayoutDashboard, label: 'Tableau de bord', badge: 0          },
+    { to: '/admin/rdv',       icon: CalendarCheck,   label: 'Rendez-vous',     badge: rdvCount    },
+    { to: '/admin/equipe',    icon: Users,            label: 'Équipe',          badge: 0          },
+    { to: '/admin/services',  icon: Stethoscope,      label: 'Services',        badge: 0          },
   ]
 
   const Badge: React.FC<{ count: number }> = ({ count }) =>
     count > 0 ? (
-      <span className="rdv-badge" style={{ marginLeft:'auto', minWidth:20, height:20, borderRadius:999, background:'#E24B4A', color:'#fff', fontSize:'0.7rem', fontWeight:600, display:'flex', alignItems:'center', justifyContent:'center', padding:'0 5px' }}>
+      <span style={{
+        marginLeft:'auto', minWidth:20, height:20,
+        borderRadius:999, background:'#E24B4A',
+        color:'#fff', fontSize:'0.7rem', fontWeight:600,
+        display:'flex', alignItems:'center', justifyContent:'center',
+        padding:'0 5px', lineHeight:1,
+      }}>
         {count > 99 ? '99+' : count}
       </span>
     ) : null
@@ -59,13 +64,13 @@ const AdminLayout: React.FC = () => {
         .adm-link:hover { background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.85); }
         .adm-link.active { background:rgba(45,97,71,0.5); color:#fff; font-weight:500; }
         .adm-link.active svg { color:#4A8C68; }
-        .adm-btn-link { display:flex; align-items:center; gap:10px; padding:11px 16px; border-radius:10px; font-size:0.88rem; background:none; border:none; cursor:pointer; width:100%; text-align:left; }
+        .adm-btn-link { display:flex; align-items:center; gap:10px; padding:11px 16px; border-radius:10px; font-size:0.88rem; font-weight:400; transition:background 0.15s, color 0.15s; background:none; border:none; cursor:pointer; width:100%; text-align:left; }
         @keyframes slideDown { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:none} }
-        @keyframes badgePop  { 0%{transform:scale(0.5)} 70%{transform:scale(1.2)} 100%{transform:scale(1)} }
+        @keyframes badgePop { 0%{transform:scale(0.5)} 70%{transform:scale(1.2)} 100%{transform:scale(1)} }
         .rdv-badge { animation: badgePop 0.3s ease; }
       `}</style>
 
-      {/* SIDEBAR desktop */}
+      {/* SIDEBAR — desktop */}
       {!isMobile && (
         <aside style={{ width:240, flexShrink:0, background:'#0d1f17', borderRight:'1px solid rgba(255,255,255,0.06)', display:'flex', flexDirection:'column', height:'100vh', position:'sticky', top:0 }}>
           <div style={{ padding:'24px 20px 20px', borderBottom:'1px solid rgba(255,255,255,0.06)' }}>
@@ -93,12 +98,15 @@ const AdminLayout: React.FC = () => {
         </aside>
       )}
 
+      {/* MAIN */}
       <div style={{ flex:1, display:'flex', flexDirection:'column', minHeight:'100vh', overflow:'auto' }}>
+
         {/* TOPBAR */}
         <div style={{ display:'flex', alignItems:'center', gap:12, padding:'12px 16px', background:'#0d1f17', borderBottom:'1px solid rgba(255,255,255,0.06)', position:'sticky', top:0, zIndex:100 }}>
           {isMobile && (
             <button onClick={() => setOpen(o => !o)} style={{ background:'none', border:'none', color:'#fff', cursor:'pointer', padding:4, display:'flex', position:'relative' }}>
               {open ? <X size={22}/> : <Menu size={22}/>}
+              {/* Badge sur le burger si menu fermé */}
               {!open && rdvCount > 0 && (
                 <span className="rdv-badge" style={{ position:'absolute', top:-4, right:-4, width:16, height:16, borderRadius:'50%', background:'#E24B4A', color:'#fff', fontSize:'0.6rem', fontWeight:600, display:'flex', alignItems:'center', justifyContent:'center' }}>
                   {rdvCount > 9 ? '9+' : rdvCount}
@@ -121,7 +129,7 @@ const AdminLayout: React.FC = () => {
           )}
         </div>
 
-        {/* MOBILE DROPDOWN */}
+        {/* MOBILE MENU DROPDOWN */}
         {isMobile && open && (
           <div style={{ background:'#0d1f17', borderBottom:'1px solid rgba(255,255,255,0.08)', padding:'8px 12px 16px', display:'flex', flexDirection:'column', gap:4, animation:'slideDown 0.2s ease', zIndex:99 }}>
             <NavItems onClick={() => setOpen(false)} />
